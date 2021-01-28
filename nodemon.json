@@ -1,5 +1,6 @@
 {
     "env": {
-        "MONGO_ATLAS_PW": "ilad"
+        "MONGO_ATLAS_PW": "ilad",
+        "PRIVATE_KEY": "dsqkfdsgrek,vk,fdgnernojgonregnrengreonnonlfdk;vk"
     }
 }
