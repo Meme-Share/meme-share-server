@@ -1,12 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const router = express.Router();
-
+const mongoose = require('mongoose');
+const checkAuth = require('../middleware/check-auth.js');
+ 
 const Post = require('../models/post');
-
+ 
 router.get('/', (req, res, next) => {
     Post.find()
-        .select('_id title description code')
+        .select('_id title description code createdBy')
         .exec()
         .then(docs => {
             res.status(200).json(
@@ -16,6 +17,7 @@ router.get('/', (req, res, next) => {
                         title: doc.title,
                         description: doc.description,
                         code: doc.code,
+                        createdBy: doc.createdBy,
                         request: {
                             type: "GET",
                             url: "http://localhost:3000/post/" + doc._id
@@ -26,13 +28,14 @@ router.get('/', (req, res, next) => {
         })
         .catch()
 });
-
-router.post('/', (req, res, next) => {
+ 
+router.post('/', checkAuth, (req, res, next) => {
     const post = new Post({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         description: req.body.description,
-        code: req.body.code
+        code: req.body.code,
+        createdBy: req.body.createdBy
     });
     post.save()
         .then(result => {
@@ -43,6 +46,7 @@ router.post('/', (req, res, next) => {
                     title: result.title,
                     description: result.description,
                     code: result.code,
+                    createdBy: result.createdBy,
                     request: {
                         type: "GET",
                         url: "http://localhost:3000/post/" + result._id
@@ -52,11 +56,11 @@ router.post('/', (req, res, next) => {
         })
         .catch(err => res.status(500).json({ error: err }))
 });
-
+ 
 router.get('/:postId', (req, res, next) => {
     const id = req.params.postId;
     Post.findById(id)
-        .select('_id title description code')
+        .select('_id title description code createdBy')
         .exec()
         .then(doc => {
             if (doc) {
@@ -71,7 +75,7 @@ router.get('/:postId', (req, res, next) => {
             res.status(500).json({ error: err })
         })
 });
-
+ 
 router.delete('/:postId', (req, res, next) => {
     const id = req.params.postId;
     Post.remove({ _id: id })
@@ -85,5 +89,5 @@ router.delete('/:postId', (req, res, next) => {
             res.status(500).json({ error: err })
         })
 });
-
+ 
 module.exports = router;
