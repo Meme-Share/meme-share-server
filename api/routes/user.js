@@ -120,7 +120,7 @@ router.post("/login", (req, res, next) => {
         });
 });
 
-router.get('/:user', (req, res, next) => {
+router.get('/:user', checkAuth, (req, res, next) => {
     var user = req.params.user;
 
     User.find({ username: user })
@@ -140,28 +140,6 @@ router.get('/:user', (req, res, next) => {
             })
         })
         .catch(err => res.status(500).json({ err }))
-
-    // User.find({ username: user })
-    //     .select('_id username role bio followers following')
-    //     .exec()
-    //     .then(async doc => {
-    //         const Posts = await Post.find();
-    //         const UserData = {
-    //             _id: doc._id,
-    //             username: doc.username,
-    //             role: doc.role,
-    //             bio: doc.bio,
-    //             followers: doc.followers,
-    //             following: doc.following,
-    //             posts: Posts.filter(Post => Post.createdBy.get('username') === doc.username)
-    //         }
-    //         console.log(UserData)
-    //         res.status(200)
-
-    //     })
-    //     .catch(err => {
-    //         res.status(500).json({ error: err })
-    //     })
 });
 
 router.patch('/:userId', checkAuth, (req, res, next) => {
