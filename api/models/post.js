@@ -5,7 +5,7 @@ const postSchema = mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     code: { type: String, required: true },
-    createdBy: { type: String, required: true }
+    createdBy: {type: Map, of: String, required: true}
 });
 
 module.exports = mongoose.model('Post', postSchema);

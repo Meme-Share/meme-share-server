@@ -5,7 +5,7 @@ const checkAuth = require('../middleware/check-auth.js');
  
 const Post = require('../models/post');
  
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Post.find()
         .select('_id title description code createdBy')
         .exec()
@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
                 })
             );
         })
-        .catch()
+        .catch(err => res.status(500).json({ error: err }))
 });
  
 router.post('/', checkAuth, (req, res, next) => {
@@ -57,7 +57,7 @@ router.post('/', checkAuth, (req, res, next) => {
         .catch(err => res.status(500).json({ error: err }))
 });
  
-router.get('/:postId', (req, res, next) => {
+router.get('/:postId', checkAuth, (req, res, next) => {
     const id = req.params.postId;
     Post.findById(id)
         .select('_id title description code createdBy')
@@ -75,8 +75,28 @@ router.get('/:postId', (req, res, next) => {
             res.status(500).json({ error: err })
         })
 });
+
+router.patch('/:postId', checkAuth, (req, res, next) => {
+    const id = req.params.postId;
+    const updateOps = {};
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+    Post.update({ _id: id }, { $set: updateOps })
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Product updated'
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+});
  
-router.delete('/:postId', (req, res, next) => {
+router.delete('/:postId', checkAuth, (req, res, next) => {
     const id = req.params.postId;
     Post.remove({ _id: id })
         .exec()
