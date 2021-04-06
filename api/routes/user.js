@@ -142,13 +142,14 @@ router.get('/:user', checkAuth, (req, res, next) => {
         .catch(err => res.status(500).json({ err }))
 });
 
-router.patch('/:userId', checkAuth, (req, res, next) => {
-    const id = req.params.userId;
+router.patch('/:user', (req, res, next) => {
+    var user = req.params.user;
+
     const updateOps = {};
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
-    User.update({ _id: id }, { $set: updateOps })
+    User.update({ username: user }, { $set: updateOps })
         .exec()
         .then(result => {
             res.status(200).json({
