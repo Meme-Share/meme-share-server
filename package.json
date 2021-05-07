@@ -1,7 +1,7 @@
 {
-  "name": "share-code-server",
+  "name": "memeshare-server",
   "version": "1.0.0",
-  "description": "a place to share your code",
+  "description": "A platfrom to share memes.",
   "private": true,
   "dependencies": {
     "bcrypt": "^5.0.0",

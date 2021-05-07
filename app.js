@@ -6,12 +6,11 @@ const mongoose = require('mongoose');
 const cors = require("cors");
 
 const userRoutes = require('./api/routes/user');
-const postRoutes = require('./api/routes/post');
 
 mongoose.connect(
-    'mongodb+srv://ilad:' +
+    'mongodb+srv://memeshare:' +
     process.env.MONGO_ATLAS_PW +
-    '@todo-app.tnrgb.mongodb.net/share-ur-code?retryWrites=true&w=majority',
+    '@memeshare.vvcby.mongodb.net/memeshare?retryWrites=true&w=majority',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -43,7 +42,6 @@ app.use(function (req, res, next) {
 });
 
 app.use('/user', userRoutes);
-app.use('/post', postRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
