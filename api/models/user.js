@@ -13,7 +13,8 @@ const userSchema = mongoose.Schema({
     role: { type: String },
     followers: [{type: Map, of: String}], 
     following: [{type: Map, of: String}], 
-    bio: { type: String }
+    bio: { type: String },
+    verified: { type: Boolean, require: true }
 });
 
 module.exports = mongoose.model('User', userSchema);

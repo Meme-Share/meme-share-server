@@ -17,6 +17,15 @@ router.get("/", checkAuth, (req, res, next) => {
     .catch((err) => res.status(500).json({ error: err }));
 });
 
+router.get("/verify/:user", (req, res, next) => {
+  User.update({ _id: req.params.user }, { $set: { verified: true } })
+    .exec()
+    .then((doc) => {
+      res.status(200).json({ message: 'Accout verified successful' });
+    })
+    .catch((err) => res.status(500).json({ error: err }));
+});
+
 router.post("/signup", (req, res, next) => {
   User.find({ email: req.body.email })
     .exec()
@@ -41,6 +50,7 @@ router.post("/signup", (req, res, next) => {
               bio: "",
               followers: [],
               following: [],
+              verified: false,
             });
             user
               .save()
