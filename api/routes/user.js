@@ -7,9 +7,9 @@ const checkAuth = require("../middleware/check-auth.js");
 
 const User = require("../models/user");
 
-router.get("/", checkAuth, (req, res, next) => {
+router.get("/", (req, res, next) => {
   User.find()
-    .select("_id username email followers following role bio")
+    .select("_id username email followers following role bio verified")
     .exec()
     .then(async (docs) => {
       res.status(200).json(docs);
@@ -20,9 +20,7 @@ router.get("/", checkAuth, (req, res, next) => {
 router.get("/verify/:user", (req, res, next) => {
   User.update({ _id: req.params.user }, { $set: { verified: true } })
     .exec()
-    .then((doc) => {
-      res.status(200).json({ message: 'Accout verified successful' });
-    })
+    .then(() => res.redirect("https://meme-share.netlify.app/"))
     .catch((err) => res.status(500).json({ error: err }));
 });
 
@@ -78,6 +76,10 @@ router.post("/signin", (req, res, next) => {
         return res.status(401).json({
           message: "Auth failed",
         });
+      } else if (user[0].verified === false) {
+        return res.status(500).json({
+          message: "Account is not verified!",
+        });
       }
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
@@ -114,11 +116,11 @@ router.post("/signin", (req, res, next) => {
     });
 });
 
-router.get("/:user", checkAuth, (req, res, next) => {
+router.get("/:user", (req, res, next) => {
   var user = req.params.user;
 
   User.find({ username: user })
-    .select("_id username role bio followers following")
+    .select("_id username role bio followers following verified")
     .exec()
     .then((doc) => {
       res.status(200).json(doc[0]);
