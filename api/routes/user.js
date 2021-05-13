@@ -7,7 +7,7 @@ const checkAuth = require("../middleware/check-auth.js");
 
 const User = require("../models/user");
 
-router.get("/", (req, res, next) => {
+router.get("/", checkAuth, (req, res, next) => {
   User.find()
     .select("_id username email followers following role bio verified")
     .exec()
@@ -46,13 +46,13 @@ router.post("/signup", (req, res, next) => {
               password: hash,
               role: "member",
               bio: "",
-              followers: [],
-              following: [],
+              picture:
+                "https://i.imgur.com/W3BqaHd_d.webp?maxwidth=760&fidelity=grand",
               verified: false,
             });
             user
               .save()
-              .then((result) => {
+              .then(() => {
                 res.status(201).json({
                   message: "User created",
                 });
@@ -116,7 +116,7 @@ router.post("/signin", (req, res, next) => {
     });
 });
 
-router.get("/:user", (req, res, next) => {
+router.get("/:user", checkAuth, (req, res, next) => {
   var user = req.params.user;
 
   User.find({ username: user })
@@ -128,7 +128,7 @@ router.get("/:user", (req, res, next) => {
     .catch((err) => res.status(500).json({ err }));
 });
 
-router.patch("/:user", (req, res, next) => {
+router.patch("/:user", checkAuth, (req, res, next) => {
   var user = req.params.user;
 
   const updateOps = {};

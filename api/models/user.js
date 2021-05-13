@@ -1,20 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    username: { type: String, require: true, unique: true },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-    },
-    password: { type: String, required: true },
-    role: { type: String },
-    followers: [{type: Map, of: String}], 
-    following: [{type: Map, of: String}], 
-    bio: { type: String },
-    verified: { type: Boolean, require: true }
+  _id: mongoose.Schema.Types.ObjectId,
+  username: { type: String, require: true, unique: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match:
+      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+  },
+  password: { type: String, required: true },
+  role: { type: String },
+  bio: { type: String },
+  picture: { type: String },
+  verified: { type: Boolean, require: true },
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
