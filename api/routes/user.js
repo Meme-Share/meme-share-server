@@ -94,7 +94,7 @@ router.post("/signin", (req, res, next) => {
               username: user[0].username,
               picture: user[0].picture,
               role: user[0].role,
-              bio: user[0].role
+              bio: user[0].bio
             },
             process.env.PRIVATE_KEY,
             {
