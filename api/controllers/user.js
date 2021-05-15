@@ -62,7 +62,7 @@ exports.signUp = (req, res, next) => {
                     process.env.AUTH_USER,
                     req.body.email,
                     "MemeShare: Email verification",
-                    `Press <a href=http://localhost:3001/user/verify/${result._id}> here </a> to verify your account.`
+                    `Press <a href=https://memeshare-server01.herokuapp.com/user/verify/${result._id}> here </a> to verify your account.`
                   )
                   .then(() =>
                     res.status(201).json({
