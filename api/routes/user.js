@@ -19,7 +19,7 @@ router.get("/:user", checkAuth, getUser);
 router.post("/signup", signUp);
 router.post("/signin", signIn);
 
-router.get("/verify/:user", userVerification);
+router.get("/verify/:token", userVerification);
 
 router.patch("/:userId", checkAuth, updateUser);
 router.delete("/:userId", checkAuth, deleteUser);

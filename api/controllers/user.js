@@ -42,6 +42,10 @@ exports.signUp = (req, res, next) => {
               error: err,
             });
           } else {
+            const token = jwt.sign(
+              { email: req.body.email },
+              process.env.PRIVATE_KEY
+            );
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
               username: req.body.username,
@@ -52,31 +56,31 @@ exports.signUp = (req, res, next) => {
               picture:
                 "https://i.imgur.com/W3BqaHd_d.webp?maxwidth=760&fidelity=grand",
               verified: false,
+              confirmationCode: token,
             });
-            user
-              .save()
-              .then((result) => {
-                console.log(result);
-                mailer
-                  .sendEmail(
-                    process.env.AUTH_USER,
-                    req.body.email,
-                    "MemeShare: Email verification",
-                    `Press <a href=https://memeshare-server01.herokuapp.com/user/verify/${result._id}> here </a> to verify your account.`
-                  )
-                  .then(() =>
+            mailer
+              .sendEmail(
+                process.env.AUTH_USER,
+                req.body.email,
+                "MemeShare: Email verification",
+                `Press <a href=https://memeshare-server01.herokuapp.com/user/verify/${token}> here </a> to verify your account.`
+              )
+              .then(() => {
+                user
+                  .save()
+                  .then(() => {
                     res.status(201).json({
                       message: "User created",
-                    })
-                  )
+                    });
+                  })
                   .catch((err) => {
-                    res.status(500).json({ err });
+                    res.status(500).json({
+                      error: err,
+                    });
                   });
               })
               .catch((err) => {
-                res.status(500).json({
-                  error: err,
-                });
+                res.status(500).json({ err });
               });
           }
         });
@@ -135,7 +139,7 @@ exports.signIn = (req, res, next) => {
 };
 
 exports.userVerification = (req, res, next) => {
-  User.update({ _id: req.params.user }, { $set: { verified: true } })
+  User.update({ confirmationCode: req.params.token }, { $set: { verified: true } })
     .exec()
     .then(() => res.redirect("https://meme-share.netlify.app/"))
     .catch((err) => res.status(500).json({ error: err }));

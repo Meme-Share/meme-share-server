@@ -15,6 +15,10 @@ const userSchema = mongoose.Schema({
   bio: { type: String },
   picture: { type: String },
   verified: { type: Boolean, require: true },
+  confirmationCode: {
+    type: String,
+    unique: true,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
