@@ -112,9 +112,7 @@ exports.signIn = (req, res, next) => {
             {
               userId: user[0]._id,
               username: user[0].username,
-              picture: user[0].picture,
-              role: user[0].role,
-              bio: user[0].bio,
+              role: user[0].role
             },
             process.env.PRIVATE_KEY,
             {
@@ -139,7 +137,10 @@ exports.signIn = (req, res, next) => {
 };
 
 exports.userVerification = (req, res, next) => {
-  User.update({ confirmationCode: req.params.token }, { $set: { verified: true } })
+  User.update(
+    { confirmationCode: req.params.token },
+    { $set: { verified: true } }
+  )
     .exec()
     .then(() => res.redirect("https://meme-share.netlify.app/"))
     .catch((err) => res.status(500).json({ error: err }));
@@ -154,16 +155,29 @@ exports.updateUser = (req, res, next) => {
   }
   User.update({ _id: userId }, { $set: updateOps })
     .exec()
-    .then((result) => {
-      res.status(200).json({
-        message: "User updated",
-      });
+    .then(() => {
+      User.findById(userId)
+        .exec()
+        .then((user) => {
+          const token = jwt.sign(
+            {
+              userId: user._id,
+              username: user.username,
+              role: user.role,
+            },
+            process.env.PRIVATE_KEY,
+            {
+              expiresIn: "1h",
+            }
+          );
+          res.status(200).json({
+            message: "User updated",
+            token: token,
+          });
+        })
+        .catch((err) => res.status(500).json({ error: err }));
     })
-    .catch((err) => {
-      res.status(500).json({
-        error: err,
-      });
-    });
+    .catch((err) => res.status(500).json({ error: err }));
 };
 
 exports.deleteUser = (req, res, next) => {
