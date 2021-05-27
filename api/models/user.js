@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema({
   bio: { type: String },
   picture: { type: String },
   verified: { type: Boolean, require: true },
+  status: { type: String },
   confirmationCode: {
     type: String,
     unique: true,
