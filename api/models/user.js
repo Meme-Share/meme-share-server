@@ -13,13 +13,28 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String },
   bio: { type: String },
-  picture: { type: String },
+  picture: {
+    type: String,
+    default: "https://i.imgur.com/W3BqaHd_d.webp?maxwidth=760&fidelity=grand",
+  },
   verified: { type: Boolean, require: true },
   status: { type: String },
   confirmationCode: {
     type: String,
     unique: true,
   },
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

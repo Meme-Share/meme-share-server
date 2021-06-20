@@ -53,8 +53,6 @@ exports.signUp = (req, res, next) => {
               password: hash,
               role: "member",
               bio: "",
-              picture:
-                "https://i.imgur.com/W3BqaHd_d.webp?maxwidth=760&fidelity=grand",
               verified: false,
               confirmationCode: token,
             });
@@ -112,7 +110,7 @@ exports.signIn = (req, res, next) => {
             {
               userId: user[0]._id,
               username: user[0].username,
-              role: user[0].role
+              role: user[0].role,
             },
             process.env.PRIVATE_KEY,
             {
@@ -135,6 +133,10 @@ exports.signIn = (req, res, next) => {
       });
     });
 };
+
+exports.followUser = async (req, res, next) => {};
+
+exports.unFollowUser = async (req, res, next) => {};
 
 exports.userVerification = (req, res, next) => {
   User.update(
