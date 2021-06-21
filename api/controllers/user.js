@@ -7,11 +7,10 @@ const mailer = require("../utils/mailer");
 
 exports.getUsers = (req, res, next) => {
   User.find()
-    .select("_id username email role bio verified picture")
+    .select("_id username email role bio verified picture followers following")
+    .populate("User", "_id name")
     .exec()
-    .then(async (docs) => {
-      res.status(200).json(docs);
-    })
+    .then((docs) => res.status(200).json(docs))
     .catch((err) => res.status(500).json({ error: err }));
 };
 
@@ -134,9 +133,45 @@ exports.signIn = (req, res, next) => {
     });
 };
 
-exports.followUser = async (req, res, next) => {};
+exports.followUser = async (req, res, next) => {
+  const followerId = req.body.followerId;
+  const followingId = req.body.followingId;
 
-exports.unFollowUser = async (req, res, next) => {};
+  User.findByIdAndUpdate(followerId, {
+    $push: { followers: followingId },
+  })
+    .exec()
+    .then(() => {
+      User.findByIdAndUpdate(followingId, {
+        $push: { following: followerId },
+      })
+        .exec()
+        .then(() => res.status(200).json({ message: "Followed successfully!" }))
+        .catch((err) => res.status(500).json({ error: err }));
+    })
+    .catch((err) => res.status(500).json({ error: err }));
+};
+
+exports.unFollowUser = async (req, res, next) => {
+  const followerId = req.body.followerId;
+  const followingId = req.body.followingId;
+
+  User.findByIdAndUpdate(followerId, {
+    $pull: { followers: followingId },
+  })
+    .exec()
+    .then(() => {
+      User.findByIdAndUpdate(followingId, {
+        $pull: { following: followerId },
+      })
+        .exec()
+        .then(() =>
+          res.status(200).json({ message: "Unfollowed successfully!" })
+        )
+        .catch((err) => res.status(500).json({ error: err }));
+    })
+    .catch((err) => res.status(500).json({ error: err }));
+};
 
 exports.userVerification = (req, res, next) => {
   User.update(

@@ -21,8 +21,8 @@ router.get("/:user", checkAuth, getUser);
 router.post("/signup", signUp);
 router.post("/signin", signIn);
 
-router.patch("/follow/:id", checkAuth, followUser);
-router.patch("/unfollow/:id", checkAuth, unFollowUser);
+router.patch("/follow/", checkAuth, followUser);
+router.patch("/unfollow/", checkAuth, unFollowUser);
 
 router.get("/verify/:token", userVerification);
 
