@@ -19,7 +19,7 @@ exports.getUser = (req, res, next) => {
   var user = req.params.user;
 
   User.find({ username: user })
-    .select("_id username email role bio verified picture")
+    .select("_id username email role bio verified picture followers following")
     .exec()
     .then((doc) => {
       res.status(200).json(doc[0]);
