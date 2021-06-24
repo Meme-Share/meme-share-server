@@ -20,6 +20,8 @@ exports.getUser = (req, res, next) => {
 
   User.find({ username: user })
     .select("_id username email role bio verified picture followers following")
+    .populate({ path: "followers", select: "username picture" })
+    .populate({ path: "following", select: "username picture" })
     .exec()
     .then((doc) => {
       res.status(200).json(doc[0]);
