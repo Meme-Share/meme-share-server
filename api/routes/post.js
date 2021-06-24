@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
+const User = require("../models/user");
 const Post = require("../models/post");
 
 const checkAuth = require("../middleware/check-auth.js");
@@ -34,10 +35,16 @@ router.post("/", checkAuth, (req, res, next) => {
   post
     .save()
     .then((result) => {
-      res.status(200).json({
-        message: "Created the post successfully",
-        postId: result.id,
-      });
+      User.findByIdAndUpdate(req.body.authorId, {
+        $push: { posts: result.id },
+      })
+        .then(() => {
+          res.status(200).json({
+            message: "Created the post successfully",
+            postId: result.id,
+          });
+        })
+        .catch((err) => res.status(404).json({ error: err }));
     })
     .catch((err) => res.status(500).json({ error: err }));
 });
