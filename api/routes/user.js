@@ -15,8 +15,8 @@ const {
   deleteUser,
 } = require("../controllers/user");
 
-router.get("/", getUsers);
-router.get("/:user", getUser);
+router.get("/", checkAuth, getUsers);
+router.get("/:user", checkAuth, getUser);
 
 router.post("/signup", signUp);
 router.post("/signin", signIn);
