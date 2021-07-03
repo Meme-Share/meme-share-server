@@ -15,6 +15,6 @@ router.get("/:postId", checkAuth, getPost);
 
 router.post("/", checkAuth, addPost);
 
-router.delete("/:postId", checkAuth, deletePost);
+router.delete("/:userId/:postId", checkAuth, deletePost);
 
 module.exports = router;

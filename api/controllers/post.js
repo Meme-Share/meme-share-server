@@ -48,6 +48,12 @@ exports.addPost = (req, res) => {
 exports.deletePost = (req, res) => {
   Post.remove({ _id: req.params.postId })
     .exec()
-    .then(() => res.status(200).json({ message: "Post deleted" }))
+    .then(() => {
+      User.findByIdAndUpdate(req.params.userId, {
+        $pull: { posts: req.params.postId },
+      })
+        .then(() => res.status(200).json({ message: "Post deleted" }))
+        .catch((err) => res.status(404).json({ error: err }));
+    })
     .catch((err) => res.status(500).json({ error: err }));
 };
