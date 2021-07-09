@@ -7,7 +7,9 @@ const mailer = require("../utils/mailer");
 
 exports.getUsers = (req, res, next) => {
   User.find()
-    .select("_id username email role bio verified picture followers following")
+    .select(
+      "_id username email role bio verified picture followers following createdAt"
+    )
     .populate({
       path: "posts",
       select: "title image date author",
@@ -25,7 +27,7 @@ exports.getUser = (req, res, next) => {
 
   User.find({ username: user })
     .select(
-      "_id username email role bio verified picture followers following posts"
+      "_id username email role bio verified picture followers following posts createdAt"
     )
     .populate({
       path: "posts",

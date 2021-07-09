@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 const userSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -41,6 +42,10 @@ const userSchema = mongoose.Schema({
       ref: "Post",
     },
   ],
+  createdAt: {
+    type: Date,
+    default: () => moment().utc(),
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
