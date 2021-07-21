@@ -4,12 +4,17 @@ const User = require("../models/user");
 const Post = require("../models/post");
 
 exports.getPosts = (req, res) => {
-  Post.find()
-    .select("_id title date author image")
-    .populate({ path: "author", select: "username picture" })
-    .exec()
-    .then((docs) => res.status(200).json(docs))
-    .catch((err) => res.status(500).json({ error: err }));
+  Post.count().exec(function (err, count) {
+    var random = Math.floor(Math.random() * count);
+
+    Post.find()
+      .skip(random)
+      .select("_id title date author image")
+      .populate({ path: "author", select: "username picture" })
+      .exec()
+      .then((docs) => res.status(200).json(docs))
+      .catch((err) => res.status(500).json({ error: err }));
+  });
 };
 
 exports.getPost = (req, res) => {
