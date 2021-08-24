@@ -16,7 +16,7 @@ router.get("/:postId", checkAuth, getPost);
 
 router.post("/", checkAuth, addPost);
 
-router.patch("/:postId", editPost);
+router.patch("/:postId", checkAuth, editPost);
 
 router.delete("/:userId/:postId", checkAuth, deletePost);
 
