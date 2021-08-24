@@ -7,6 +7,7 @@ const {
   getPosts,
   getPost,
   addPost,
+  editPost,
   deletePost,
 } = require("../controllers/post");
 
@@ -14,6 +15,8 @@ router.get("/", checkAuth, getPosts);
 router.get("/:postId", checkAuth, getPost);
 
 router.post("/", checkAuth, addPost);
+
+router.patch("/:postId", editPost);
 
 router.delete("/:userId/:postId", checkAuth, deletePost);
 

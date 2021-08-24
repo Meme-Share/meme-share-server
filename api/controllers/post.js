@@ -33,6 +33,7 @@ exports.addPost = (req, res) => {
     author: req.body.authorId,
     image: req.body.image,
   });
+
   post
     .save()
     .then((result) => {
@@ -46,6 +47,24 @@ exports.addPost = (req, res) => {
           });
         })
         .catch((err) => res.status(404).json({ error: err }));
+    })
+    .catch((err) => res.status(500).json({ error: err }));
+};
+
+exports.editPost = (req, res) => {
+  var postId = req.params.postId;
+
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+
+  Post.update({ _id: postId }, { $set: updateOps })
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        message: "Post updated",
+      });
     })
     .catch((err) => res.status(500).json({ error: err }));
 };
