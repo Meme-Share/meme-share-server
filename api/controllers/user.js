@@ -69,7 +69,7 @@ exports.signUp = (req, res, next) => {
               email: req.body.email,
               password: hash,
               role: "member",
-              bio: "",
+              picture: `https://avatars.dicebear.com/api/micah/${req.body.username}.svg?w=80&h=80`,
               verified: false,
               confirmationCode: token,
             });

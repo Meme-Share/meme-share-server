@@ -16,7 +16,6 @@ const userSchema = mongoose.Schema({
   bio: { type: String },
   picture: {
     type: String,
-    default: "https://i.imgur.com/W3BqaHd_d.webp?maxwidth=760&fidelity=grand",
   },
   verified: { type: Boolean, required: true },
   status: { type: String },
